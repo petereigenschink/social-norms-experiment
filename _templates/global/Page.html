@@ -1,0 +1,41 @@
+{% extends "otree/Page.html" %}
+{% load otree static %}
+
+{% block global_styles  %}
+<style>
+    .content {
+        text-align: center;
+    }
+    .content > div {
+        margin-bottom: 30px;
+    }
+    .col-form-label {
+        display: block;
+    }
+    .controls {
+        display: inline-block;
+    }
+    .treatment .norm {
+        border: 1px solid black;
+        font-size: 20px;
+        margin: 5px;
+        padding: 15px;
+        display: inline-block;
+        max-width: 250px;
+    }
+    .treatment .prompt {
+        border: 2px solid black;
+        font-size: 20px;
+        margin: 5px;
+        margin-top: -20px;
+        padding: 10px;
+        max-width: 200px;
+        display: inline-block;
+        font-weight: 500;
+        background-color: orange;
+    }
+</style>
+{% endblock %}
+
+{% block global_scripts  %}
+{% endblock %}

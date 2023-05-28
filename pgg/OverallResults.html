@@ -1,0 +1,20 @@
+{{ extends "global/Page.html" }}
+{{ block title }} Final Results {{ endblock }}
+{{ block content }}
+
+<div class="content">
+    <div>
+        <div>Your payoff from <i>part 1</i> = {{ real_pre_treatment_payoff }} ({{ participant.pre_treatment_payoff }})</div>
+        <div>Your payoff from <i>part 2</i> = {{ real_post_treatment_payoff }} ({{ participant.post_treatment_payoff }})</div>
+    </div>
+    
+    <div>The show-up payment is {{ participation_fee }}.</div>
+
+    <hr/>
+    
+    <div>Your payoff was randomly chosen from <b>part {{ participant.pay_pre_treatment ?? '1' :: '2'}}</b>.</div>
+    <div>Your total payoff is therefore {{ participant.payoff_plus_participation_fee() }}.</div>
+
+    {{ next_button }}
+</div>
+{{ endblock }}
