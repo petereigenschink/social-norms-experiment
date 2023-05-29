@@ -5,8 +5,8 @@ import random
 class C(BaseConstants):
     NAME_IN_URL = 'pgg'
 
-    PLAYERS_PER_GROUP = 2 # CHANGE TO 4
-    NUM_ROUNDS = 2 # CHANGE TO 20
+    PLAYERS_PER_GROUP = 2 # TODO: Change to 4
+    NUM_ROUNDS = 2 # TODO: Change to 20
     PRE_TREATMENT_ROUNDS=NUM_ROUNDS/2
     TREATMENTS={
         "SN": "SN",
@@ -42,6 +42,7 @@ def set_pgg_round_payoffs(group: Group):
     for p in players:
         p.payoff = C.ENDOWMENT - p.contribution + group.individual_share
 
+# TODO: Implement logic for imbalanced groups in first session
 def assign_treatments(subsession: Subsession):
     subsession.group_randomly()
 
