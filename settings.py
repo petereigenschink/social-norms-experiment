@@ -4,7 +4,7 @@ SESSION_CONFIGS = [
     dict(
          name='social_norms_experiment',
          app_sequence=['pgg'],
-         num_demo_participants=2,
+         num_demo_participants=4,
     ),
 ]
 
