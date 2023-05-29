@@ -1,14 +1,50 @@
 {{ extends "global/Page.html" }}
-{{ block title }} Part 2 | Instructions {{ endblock }}
+{{ block title }} Instructions Part 2 {{ endblock }}
 {{ block content }}
 
 <div class="content">
 
     <p>
-        Very well done! You played 10 periods and earned X Tokens (= X €). Now we enter the second half of the experiment with another 10 periods to play. Please remember, you will be paid the money you earned from either the first 10 periods or the following 10 periods.  
+        Very well done! You played 10 periods and earned <b>{{ participant.payoff }}</b> (= {{ participant.payoff_in_real_world_currency() }}). Now we enter the second half of the experiment with another 10 periods to play. Please remember, you will be paid the money you earned from either the first 10 periods or the following 10 periods.
 
         Please note: We decided to regroup participants for the next 10 periods. You will therefore play the next 10 periods with three new participants you haven’t played with before. You will remain in this new group for all following 10 periods. The general logic of decision making remains the same. We only changed the screen at the beginning of each period (which will now look like this):
     </p>
+
+    <div class="preview content">
+        <div class="treatment">
+            {{ if participant.treatment == C.TREATMENTS.SN or participant.treatment == C.TREATMENTS.SNP }}
+            <div class="norm">
+                Typically, people contribute between 10% and 40% in those kinds of games.
+            </div>
+            {{ elif participant.treatment == C.TREATMENTS.DN or participant.treatment == C.TREATMENTS.DNP }}
+            <div class="norm">
+                Typically, people start to contribute 40% and end with contributing 10% in those kinds of games.
+            </div>
+            {{ endif }}
+            {{ if participant.treatment == C.TREATMENTS.SNP or participant.treatment == C.TREATMENTS.DNP }}
+            <br/>
+            <div class="prompt">
+                Help the group to break the pattern!
+            </div>
+            {{ endif }}
+        </div>
+    
+        <div class="info">
+            <span>Your endowment: {{ C.ENDOWMENT }}</span>
+        </div>
+    
+        <div class="inputs">
+            <div class="mb-3 _formfield">
+    
+                <label class="col-form-label" for="id_contribution">How much do you contribute (0-20 points)?</label>
+                <div class="controls">
+                    <div class="input-group input-group-narrow"><input type="number" class="form-control" inputmode="numeric" id="id_contribution" max="20" min="0" name="contribution" required="" value="" disabled><span class="input-group-text">points</span></div>
+                </div>
+            </div>
+        </div>
+    
+        <button class="btn btn-primary disabled">Next</button>
+    </div>
 
     <p>
         Click “Next” once you are ready to enter the second part of the experiment.

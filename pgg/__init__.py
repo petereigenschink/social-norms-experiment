@@ -42,6 +42,25 @@ def set_pgg_round_payoffs(group: Group):
     for p in players:
         p.payoff = C.ENDOWMENT - p.contribution + group.individual_share
 
+def assign_treatments(subsession: Subsession):
+    subsession.group_randomly()
+
+    treatments = itertools.cycle(C.TREATMENTS.values())
+    for group in subsession.get_groups():
+        treatment = next(treatments)
+        for player in group.get_players():
+            player.participant.treatment = treatment
+
+def determine_final_payoff(player, timeout_happened):
+    if player.round_number != C.NUM_ROUNDS:
+        return
+
+    player.participant.post_treatment_payoff=player.participant.payoff
+
+    player.participant.pay_pre_treatment=random.choice([True, False])
+    if player.participant.pay_pre_treatment:
+        player.participant.payoff=player.participant.pre_treatment_payoff
+
 # PAGES
 class TreatmentAssignment(WaitPage):
 
@@ -51,20 +70,7 @@ class TreatmentAssignment(WaitPage):
     def is_displayed(player):
         return player.round_number == C.PRE_TREATMENT_ROUNDS + 1
 
-    @staticmethod
-    def after_all_players_arrive(subsession):
-        subsession.group_randomly()
-
-        treatments = itertools.cycle(C.TREATMENTS.values())
-        for group in subsession.get_groups():
-            treatment = next(treatments)
-            for player in group.get_players():
-                player.participant.treatment = treatment
-
-    @staticmethod
-    def before_next_page(player, timeout_happened):
-        player.participant.pre_treatment_payoff=player.participant.payoff
-        player.participant.payoff = 0
+    after_all_players_arrive = assign_treatments
 
 class TreatmentInfo(Page):
 
@@ -99,27 +105,7 @@ class ResultsWaitPage(WaitPage):
     after_all_players_arrive = set_pgg_round_payoffs
 
 class Results(Page):
-    pass
-
-class PreTreatmentResults(Page):
-
-    @staticmethod
-    def is_displayed(player):
-        return player.round_number == C.PRE_TREATMENT_ROUNDS
-
-class PostTreatmentResults(Page):
-
-    @staticmethod
-    def is_displayed(player):
-        return player.round_number == C.NUM_ROUNDS
-
-    @staticmethod
-    def before_next_page(player, timeout_happened):
-        player.participant.post_treatment_payoff=player.participant.payoff
-
-        player.participant.pay_pre_treatment=random.choice([True, False])
-        if player.participant.pay_pre_treatment:
-            player.participant.payoff=player.participant.pre_treatment_payoff
+    before_next_page=determine_final_payoff
 
 class OverallResults(Page):
 
@@ -136,7 +122,7 @@ class OverallResults(Page):
             "total_payoff": player.participant.post_treatment_payoff.to_real_world_currency(player.session)
         }
 
-page_sequence = [TreatmentAssignment, TreatmentInfo, Contribute, ResultsWaitPage, Results, PreTreatmentResults, PostTreatmentResults, OverallResults]
+page_sequence = [TreatmentAssignment, TreatmentInfo, Contribute, ResultsWaitPage, Results, OverallResults]
 
 # Payoff export
 def custom_export(players):

@@ -4,16 +4,19 @@
 
 <div class="content">
     <div>
-        <div>Your payoff from <i>part 1</i> = {{ real_pre_treatment_payoff }} ({{ participant.pre_treatment_payoff }})</div>
-        <div>Your payoff from <i>part 2</i> = {{ real_post_treatment_payoff }} ({{ participant.post_treatment_payoff }})</div>
+        Very well done!<br/>
+        In the <i>first 10 rounds</i> you earned <b>{{ real_pre_treatment_payoff }}</b> ({{ participant.pre_treatment_payoff }}).<br/>
+        In the <i>second 10 rounds</i> you earned <b>{{ real_post_treatment_payoff }}</b> ({{ participant.post_treatment_payoff }}).<br/>
     </div>
-    
-    <div>The show-up payment is {{ participation_fee }}.</div>
+
+    <div>
+        You are only getting paid for the <i>{{ participant.pay_pre_treatment ?? 'first' :: 'second'}} 10 rounds</i>.<br/>
+        Thus, your payoff is <b>{{ participant.pay_pre_treatment ?? real_pre_treatment_payoff :: real_post_treatment_payoff }}</b> plus additional <b>{{ participation_fee }}</b> for showing up.
+    </div>
 
     <hr/>
     
-    <div>Your payoff was randomly chosen from <b>part {{ participant.pay_pre_treatment ?? '1' :: '2'}}</b>.</div>
-    <div>Your total payoff is therefore {{ participant.payoff_plus_participation_fee() }}.</div>
+    <div>Your total payoff is therefore <b>{{ participant.payoff_plus_participation_fee() }}</b>. Congratulations!</div>
 
     {{ next_button }}
 </div>
