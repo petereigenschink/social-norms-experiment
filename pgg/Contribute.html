@@ -3,30 +3,6 @@
 {{ block content }}
 
 <div class="content">
-    
-    <div class="treatment">
-        {{ if treated }}
-            {{ if participant.treatment == C.TREATMENTS.SN or participant.treatment == C.TREATMENTS.SNP }}
-            <div class="norm">
-                Typically, people contribute between 10% and 40% in those kinds of games.
-            </div>
-            {{ elif participant.treatment == C.TREATMENTS.DN or participant.treatment == C.TREATMENTS.DNP }}
-            <div class="norm">
-                Typically, people start to contribute 40% and end with contributing 10% in those kinds of games.
-            </div>
-            {{ endif }}
-            {{ if participant.treatment == C.TREATMENTS.SNP or participant.treatment == C.TREATMENTS.DNP }}
-            <br/>
-            <div class="prompt">
-                Help the group to break the pattern!
-            </div>
-            {{ endif }}
-        {{ else }}
-        <div class="norm">
-            Dummy message
-        </div>
-        {{ endif }}
-    </div>
 
     <div class="info">
         <span>Your endowment: {{ C.ENDOWMENT }}</span>
