@@ -24,6 +24,7 @@ class Subsession(BaseSubsession):
 
 class Group(BaseGroup):
     total_contribution = models.CurrencyField()
+    total_pool = models.CurrencyField()
     individual_share = models.CurrencyField()
 
 class Player(BasePlayer):
@@ -36,8 +37,9 @@ def set_pgg_round_payoffs(group: Group):
     players = group.get_players()
     contributions = [p.contribution for p in players]
     group.total_contribution = sum(contributions)
+    group.total_pool = group.total_contribution * C.EFFICIENCY_FACTOR
     group.individual_share = (
-        group.total_contribution * C.EFFICIENCY_FACTOR / C.PLAYERS_PER_GROUP
+        group.total_pool / C.PLAYERS_PER_GROUP
     )
     for p in players:
         p.payoff = C.ENDOWMENT - p.contribution + group.individual_share

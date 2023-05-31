@@ -4,19 +4,15 @@
 
 <div class="content">
     <div>
-        Very well done!<br/>
-        In the <i>first 10 rounds</i> you earned <b>{{ real_pre_treatment_payoff }}</b> ({{ participant.pre_treatment_payoff }}).<br/>
-        In the <i>second 10 rounds</i> you earned <b>{{ real_post_treatment_payoff }}</b> ({{ participant.post_treatment_payoff }}).<br/>
+        In Part 1 (the first 10 rounds) you earned {{ participant.pre_treatment_payoff }} = {{ real_pre_treatment_payoff }}.<br/>
+        In Part 2 (the second 10 rounds) you earned {{ participant.post_treatment_payoff }} = {{ real_post_treatment_payoff }}.<br/>
     </div>
 
     <div>
-        You are only getting paid for the <i>{{ participant.pay_pre_treatment ?? 'first' :: 'second'}} 10 rounds</i>.<br/>
-        Thus, your payoff is <b>{{ participant.pay_pre_treatment ?? real_pre_treatment_payoff :: real_post_treatment_payoff }}</b> plus additional <b>{{ participation_fee }}</b> for showing up.
+        The computer randomly selected Part {{ participant.pay_pre_treatment ?? '1' :: '2'}} for your payoff for this experiment.
     </div>
-
-    <hr/>
     
-    <div>Your total payoff is therefore <b>{{ participant.payoff_plus_participation_fee() }}</b>. Congratulations!</div>
+    <div>Thank you for participating in this experiment.</div>
 
     {{ next_button }}
 </div>

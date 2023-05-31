@@ -4,19 +4,14 @@
 
 <div class="content">
     <div>
-        <div>Your contribution to the project = {{ player.contribution }}</div>
-        <div>Sum of contributions in your group = {{ group.total_contribution }}</div>
-        <div>Income of the project = {{ group.individual_share }}</div>
+        <div>Your contribution to the group account: {{ player.contribution }}</div>
+        <div>Sum of contributions in your group: {{ group.total_contribution }}</div>
+        <div>To be distributed among all group members: {{ C.EFFICIENCY_FACTOR }}*{{ group.total_contribution }}={{ group.total_pool }}</div>
+        <div>Your income from the group account: {{ group.individual_share }}</div>
     </div>
     
     <div>
-        <b>Your income in this round = {{ player.payoff }}.</b>
-    </div>
-
-    <hr>
-
-    <div>
-        Your total income so far = {{ participant.payoff }}
+        <b>Your income in this round: {{ C.ENDOWMENT }} - {{ player.contribution }} + {{ group.individual_share }} = {{ player.payoff }}</b>
     </div>
 
     {{ next_button }}
