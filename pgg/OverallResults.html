@@ -9,7 +9,7 @@
     </div>
 
     <div>
-        The computer randomly selected Part {{ participant.pay_pre_treatment ?? '1' :: '2'}} for your payoff for this experiment.
+        The computer randomly selected Part {{ participant.pay_pre_treatment ?? '1' :: '2'}} for your payoff for this experiment: {{ participant.payoff_in_real_world_currency() }}
     </div>
     
     <div>Thank you for participating in this experiment.</div>
