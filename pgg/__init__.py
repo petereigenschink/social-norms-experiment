@@ -54,13 +54,14 @@ def assign_treatments(subsession: Subsession):
         for player in group.get_players():
             player.participant.treatment = treatment
 
+pay_pre_treatment=random.choice([True, False])
 def determine_final_payoff(player, timeout_happened):
     if player.round_number != C.NUM_ROUNDS:
         return
 
     player.participant.post_treatment_payoff=player.participant.payoff
 
-    player.participant.pay_pre_treatment=random.choice([True, False])
+    player.participant.pay_pre_treatment=pay_pre_treatment
     if player.participant.pay_pre_treatment:
         player.participant.payoff=player.participant.pre_treatment_payoff
 
@@ -130,10 +131,37 @@ page_sequence = [TreatmentAssignment, TreatmentInfo, Contribute, ResultsWaitPage
 # Payoff export
 def custom_export(players):
     # header row
-    yield ['session', 'participant_code', 'participant_label', 'payoff']
+    yield ['session', 'participant_code', 'participant_label', 'payoff_points', 'payoff_real', 'payoff_plus_participation_fee']
     participants={}
     for p in players:
         participant = p.participant
         participants[participant.code]=participant
     for participant in participants.values():
-        yield [participant.session.code, participant.code, participant.label, participant.payoff]
+        yield [participant.session.code, participant.code, participant.label, str(participant.payoff), str(participant.payoff_in_real_world_currency()) , str(participant.payoff_plus_participation_fee())]
+
+"""
+# Data export
+def custom_export(players):
+    # header row
+    yield ['session', 'participant_code', 'participant_label', 'treatment', 'round_number', 'group_id_in_subsession', 'player_id_in_group', 'contribution', 'payoff']
+    participants={}
+    for p in players:
+
+        treatment=None
+        try:
+            treatment=p.participant.treatment
+        except KeyError:
+            treatment=''
+
+        yield [
+            p.session.code,
+            p.participant.code,
+            p.participant.label,
+            treatment,
+            p.round_number,
+            p.group.id_in_subsession,
+            p.id_in_group,
+            p.contribution,
+            p.payoff
+        ]
+"""
