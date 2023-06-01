@@ -3,7 +3,7 @@ import itertools
 import random
 
 class C(BaseConstants):
-    NAME_IN_URL = 'pgg'
+    NAME_IN_URL = 'pggsn'
 
     PLAYERS_PER_GROUP = 4 # TODO: Change to 4
     NUM_ROUNDS = 20 # TODO: Change to 20
