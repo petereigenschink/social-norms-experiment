@@ -5,8 +5,8 @@ import random
 class C(BaseConstants):
     NAME_IN_URL = 'pgg'
 
-    PLAYERS_PER_GROUP = 2 # TODO: Change to 4
-    NUM_ROUNDS = 2 # TODO: Change to 20
+    PLAYERS_PER_GROUP = 4 # TODO: Change to 4
+    NUM_ROUNDS = 20 # TODO: Change to 20
     PRE_TREATMENT_ROUNDS=NUM_ROUNDS/2
     TREATMENTS={
         "SN": "SN",
