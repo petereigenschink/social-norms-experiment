@@ -1,17 +1,17 @@
-{{ extends "global/Page-PGG.html" }}
+{{ extends "pggsn/Base-Page.html" }}
 {{ block title }} Results | Round {{ player.round_number }} {{ endblock }}
 {{ block content }}
 
 <div class="content">
     <div>
-        <div>Your contribution to the group account: {{ player.contribution }}</div>
-        <div>Sum of contributions in your group: {{ group.total_contribution }}</div>
-        <div>To be distributed among all group members: {{ C.EFFICIENCY_FACTOR }}*{{ group.total_contribution }}={{ group.total_pool }}</div>
-        <div>Your income from the group account: {{ group.individual_share }}</div>
+        <div>Your contribution to the group account: {{ player.contribution }} token(s)</div>
+        <div>Sum of contributions in your group: {{ group.total_contribution }} token(s)</div>
+        <div>To be distributed among all group members: {{ C.EFFICIENCY_FACTOR }}*{{ group.total_contribution }} = {{ group.total_pool }} token(s)</div>
+        <div>Your income from the group account: {{ group.individual_share }} token(s)</div>
     </div>
     
     <div>
-        <b>Your income in this round: {{ C.ENDOWMENT }} - {{ player.contribution }} + {{ group.individual_share }} = {{ player.payoff }}</b>
+        <b>Your income in this round: {{ C.ENDOWMENT }} - {{ player.contribution }} + {{ group.individual_share }} = {{ payoff }} token(s)</b>
     </div>
 
     {{ next_button }}

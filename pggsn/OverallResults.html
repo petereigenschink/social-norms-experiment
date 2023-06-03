@@ -1,18 +1,16 @@
-{{ extends "global/Page-PGG.html" }}
+{{ extends "pggsn/Base-Page.html" }}
 {{ block title }} Final Results {{ endblock }}
 {{ block content }}
 
 <div class="content">
     <div>
-        In Part 1 (the first 10 rounds) you earned {{ participant.pre_treatment_payoff }} = {{ real_pre_treatment_payoff }}.<br/>
-        In Part 2 (the second 10 rounds) you earned {{ participant.post_treatment_payoff }} = {{ real_post_treatment_payoff }}.<br/>
+        In Part 1 (the first 10 rounds) you earned {{ pre_treatment_payoff }} tokens = {{ real_pre_treatment_payoff }}€.<br/>
+        In Part 2 (the second 10 rounds) you earned {{ post_treatment_payoff }} tokens = {{ real_post_treatment_payoff }}€.<br/>
     </div>
 
     <div>
-        The computer randomly selected Part {{ participant.pay_pre_treatment ?? '1' :: '2'}} for payoff for all participants for this experiment.
+        The computer randomly selected Part {{ C.PAY_PRE_TREATMENT ?? '1' :: '2'}} for payoff for all participants for this experiment.
     </div>
-    
-    <div>Thank you for participating in this experiment.</div>
 
     {{ next_button }}
 </div>

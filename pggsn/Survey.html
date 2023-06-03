@@ -1,5 +1,5 @@
 {{ extends "pggsn/Base-Page.html" }}
-{{ block title }}Contribute | Round {{ player.round_number }} {{ endblock }}
+{{ block title }}Survey{{ player.round_number }} {{ endblock }}
 {{ block content }}
 
 <div class="otree-timer alert alert-warning">
@@ -13,7 +13,11 @@
 <div class="content">
 
     <div class="info">
-        <span>Your endowment: {{ C.ENDOWMENT }} tokens</span>
+        Please rate your answers from 1 (strongly disagree) to 5 (strongly agree).
+    </div>
+
+    <div class="info">
+        <i>In the second part of the experiment, I felt...</i>
     </div>
 
     <div class="inputs">
@@ -28,7 +32,7 @@
 <script>
     $(function () {
         var currentDate = new Date();
-        var remainingTimeoutSeconds = 15;
+        var remainingTimeoutSeconds = 60;
         var milliseconds = Math.floor(remainingTimeoutSeconds * 1000);
         $('.otree-timer__time-left').countdown(currentDate.valueOf() + milliseconds)
             .on('update.countdown', function (event) {
@@ -40,7 +44,7 @@
             .on('finish.countdown', function (event) {
                 var format = '%-N:%S';
                 $(this).html(event.strftime(format));
-                alert("Time has run out. Please make your decision.");
+                alert("Time has run out. Please make your choices.");
             });
     });
 </script>

@@ -1,4 +1,4 @@
-{{ extends "global/Page-PGG.html" }}
+{{ extends "pggsn/Base-Page.html" }}
 {{ block title }} Instructions for part 2 {{ endblock }}
 {{ block content }}
 
@@ -13,16 +13,16 @@
 
     <div class="content">
         <div class="treatment">
-            {{ if participant.treatment == C.TREATMENTS.SN or participant.treatment == C.TREATMENTS.SNP }}
+            {{ if group.treatment == C.TREATMENTS.SN or group.treatment == C.TREATMENTS.SNP }}
             <div class="norm">
-                Typically, people contribute between 10% and 40% in those kinds of games. Thus, participants contribute little to the public account.
+                Typically, participants contribute between 10% and 40% in those kinds of games. Thus, participants contribute little to the public account.
             </div>
-            {{ elif participant.treatment == C.TREATMENTS.DN or participant.treatment == C.TREATMENTS.DNP }}
+            {{ elif group.treatment == C.TREATMENTS.DN or group.treatment == C.TREATMENTS.DNP }}
             <div class="norm">
-                Typically, people start to contribute 40% and end with contributing 10% in those kinds of games. Thus, participants contribute less and less to the public account.
+                Typically, participants start to contribute 40% and end with contributing 10% in those kinds of games. Thus, participants contribute less and less to the public account.
             </div>
             {{ endif }}
-            {{ if participant.treatment == C.TREATMENTS.SNP or participant.treatment == C.TREATMENTS.DNP }}
+            {{ if group.treatment == C.TREATMENTS.SNP or group.treatment == C.TREATMENTS.DNP }}
             <br/>
             <div class="prompt">
                 Work together with your group partners to break the negative pattern.

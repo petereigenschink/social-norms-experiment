@@ -5,8 +5,8 @@ import random
 class C(BaseConstants):
     NAME_IN_URL = 'pggsn'
 
-    PLAYERS_PER_GROUP = 4 # TODO: Change to 4
-    NUM_ROUNDS = 20 # TODO: Change to 20
+    PLAYERS_PER_GROUP = 2 # TODO: Change to 4
+    NUM_ROUNDS = 2 # TODO: Change to 20
     PRE_TREATMENT_ROUNDS=NUM_ROUNDS/2
     TREATMENTS={
         "SN": "SN",
@@ -14,8 +14,12 @@ class C(BaseConstants):
         "DN": "DN",
         "DNP": "DNP"
     }
-    ENDOWMENT = cu(20)
+    ENDOWMENT = 20
     EFFICIENCY_FACTOR = 2
+    PAY_PRE_TREATMENT=random.choice([True, False])
+    PAYOFF_CONVERSION_RATE=0.07
+    NUM_SEATS=32
+    SURVEY_CHOICES=[1,2,3,4,5]
 
 
 class Subsession(BaseSubsession):
@@ -23,13 +27,59 @@ class Subsession(BaseSubsession):
 
 
 class Group(BaseGroup):
-    total_contribution = models.CurrencyField()
-    total_pool = models.CurrencyField()
-    individual_share = models.CurrencyField()
+    treatment = models.StringField()
+    total_contribution = models.IntegerField()
+    total_pool = models.IntegerField()
+    individual_share = models.IntegerField()
 
 class Player(BasePlayer):
-    contribution = models.CurrencyField(
-        min=0, max=C.ENDOWMENT, label=f'How much do you contribute (0-{C.ENDOWMENT})?'
+    final_real_payoff = models.FloatField()
+    seat_number = models.IntegerField(
+        min=1, max=C.NUM_SEATS, label=f'What is your seat number (1-{C.NUM_SEATS})?'
+    )
+    contribution = models.IntegerField(
+        min=0, max=C.ENDOWMENT, label=f'How much do you contribute (0-{C.ENDOWMENT} tokens)?'
+    )
+    
+    survey_q1=models.IntegerField(
+        choices=C.SURVEY_CHOICES,
+        widget=widgets.RadioSelectHorizontal,
+        label='... like I was working together with my group partners towards a common goal.'
+    )
+    survey_q2=models.IntegerField(
+        choices=C.SURVEY_CHOICES,
+        widget=widgets.RadioSelectHorizontal,
+        label='... I was working for my own good instead of the common good.'
+    )
+    survey_q3=models.IntegerField(
+        choices=C.SURVEY_CHOICES,
+        widget=widgets.RadioSelectHorizontal,
+        label='... pressured into contributing to the public account.'
+    )
+    survey_q4=models.IntegerField(
+        choices=C.SURVEY_CHOICES,
+        widget=widgets.RadioSelectHorizontal,
+        label='... obligated to contribute to the public account.'
+    )
+    survey_q5=models.IntegerField(
+        choices=C.SURVEY_CHOICES,
+        widget=widgets.RadioSelectHorizontal,
+        label='... it was possible to contribute more to the public account, compared to the first half.'
+    )
+    survey_q6=models.IntegerField(
+        choices=C.SURVEY_CHOICES,
+        widget=widgets.RadioSelectHorizontal,
+        label='... the contributions would not change, compared to the first half.'
+    )
+    survey_q7=models.IntegerField(
+        choices=C.SURVEY_CHOICES,
+        widget=widgets.RadioSelectHorizontal,
+        label='... trusted in my group partners to contribute to the public account.'
+    )
+    survey_q8=models.IntegerField(
+        choices=C.SURVEY_CHOICES,
+        widget=widgets.RadioSelectHorizontal,
+        label='... felt that if I did my part in contributing to the public account, the others would do the same.'
     )
 
 # FUNCTIONS
@@ -38,7 +88,7 @@ def set_pgg_round_payoffs(group: Group):
     contributions = [p.contribution for p in players]
     group.total_contribution = sum(contributions)
     group.total_pool = group.total_contribution * C.EFFICIENCY_FACTOR
-    group.individual_share = (
+    group.individual_share = round(
         group.total_pool / C.PLAYERS_PER_GROUP
     )
     for p in players:
@@ -50,22 +100,41 @@ def assign_treatments(subsession: Subsession):
 
     treatments = itertools.cycle(C.TREATMENTS.values())
     for group in subsession.get_groups():
-        treatment = next(treatments)
+        group.treatment = next(treatments)
         for player in group.get_players():
-            player.participant.treatment = treatment
+            player.participant.vars["treatment"] = group.treatment
 
-pay_pre_treatment=random.choice([True, False])
 def determine_final_payoff(player, timeout_happened):
     if player.round_number != C.NUM_ROUNDS:
         return
 
-    player.participant.post_treatment_payoff=player.participant.payoff
+    player.participant.vars["post_treatment_payoff"]=player.participant.payoff
 
-    player.participant.pay_pre_treatment=pay_pre_treatment
-    if player.participant.pay_pre_treatment:
-        player.participant.payoff=player.participant.pre_treatment_payoff
+    payoff=player.participant.payoff
+    if C.PAY_PRE_TREATMENT:
+        payoff=player.participant.vars["pre_treatment_payoff"]
+    
+    final_real_payoff=to_real_currency(payoff)
+    player.participant.payoff=final_real_payoff
+    player.participant.vars["real_payoff"]=final_real_payoff
+    player.final_real_payoff=final_real_payoff
+
+def to_real_currency(num):
+    return round(C.PAYOFF_CONVERSION_RATE*int(num),2)
 
 # PAGES
+class SeatNumber(Page):
+    form_model = 'player'
+    form_fields = ['seat_number']
+
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == 1
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        player.participant.label=str(player.seat_number)
+
 class TreatmentAssignment(WaitPage):
 
     wait_for_all_groups = True
@@ -78,38 +147,43 @@ class TreatmentAssignment(WaitPage):
 
 class TreatmentInfo(Page):
 
+    timeout_seconds=30
+
     @staticmethod
     def is_displayed(player):
         return player.round_number == C.PRE_TREATMENT_ROUNDS + 1
 
     @staticmethod
     def before_next_page(player, timeout_happened):
-        player.participant.pre_treatment_payoff=player.participant.payoff
+        player.participant.vars["pre_treatment_payoff"]=player.participant.payoff
         player.participant.payoff = 0
 
 class Contribute(Page):
     form_model = 'player'
     form_fields = ['contribution']
 
-    @staticmethod
-    def vars_for_template(player):
-        
-        treated=None
-        try:
-            player.participant.treatment
-            treated=True
-        except KeyError:
-            treated=False
-
-        return {
-            "treated": treated
-        }
-
 class ResultsWaitPage(WaitPage):
     after_all_players_arrive = set_pgg_round_payoffs
 
 class Results(Page):
+
+    timeout_seconds=15
+
+    @staticmethod
+    def vars_for_template(player):
+        return {
+            "payoff": int(player.payoff)
+        }
+    
     before_next_page=determine_final_payoff
+
+class Survey(Page):
+    form_model = 'player'
+    form_fields = [f'survey_q{i}' for i in range(1,9)]
+
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == C.NUM_ROUNDS
 
 class OverallResults(Page):
 
@@ -119,25 +193,35 @@ class OverallResults(Page):
 
     @staticmethod
     def vars_for_template(player):
+        pre_treatment_payoff = int(player.participant.vars["pre_treatment_payoff"])
+        post_treatment_payoff = int(player.participant.vars["post_treatment_payoff"])
         return {
-            "participation_fee": player.session.config['participation_fee'],
-            "real_pre_treatment_payoff": player.participant.pre_treatment_payoff.to_real_world_currency(player.session),
-            "real_post_treatment_payoff": player.participant.post_treatment_payoff.to_real_world_currency(player.session),
-            "total_payoff": player.participant.post_treatment_payoff.to_real_world_currency(player.session)
+            "pre_treatment_payoff": pre_treatment_payoff,
+            "real_pre_treatment_payoff": to_real_currency(pre_treatment_payoff),
+            "post_treatment_payoff": post_treatment_payoff,
+            "real_post_treatment_payoff": to_real_currency(post_treatment_payoff),
+            "payoff": player.participant.payoff
         }
 
-page_sequence = [TreatmentAssignment, TreatmentInfo, Contribute, ResultsWaitPage, Results, OverallResults]
+class ThankYou(Page):
 
-# Payoff export
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == C.NUM_ROUNDS
+
+page_sequence = [SeatNumber, TreatmentAssignment, TreatmentInfo, Contribute,
+                    ResultsWaitPage, Results, Survey, OverallResults, ThankYou]
+
+# Payoff export in data tab
 def custom_export(players):
     # header row
-    yield ['session', 'participant_code', 'participant_label', 'payoff_points', 'payoff_real', 'payoff_plus_participation_fee']
+    yield ['session', 'participant_code', 'participant_label', 'payoff_real']
     participants={}
     for p in players:
         participant = p.participant
         participants[participant.code]=participant
     for participant in participants.values():
-        yield [participant.session.code, participant.code, participant.label, str(participant.payoff), str(participant.payoff_in_real_world_currency()) , str(participant.payoff_plus_participation_fee())]
+        yield [participant.session.code, participant.code, participant.label, str(participant.vars["real_payoff"] if "real_payoff" in participant.vars else 0.0)]
 
 """
 # Data export
