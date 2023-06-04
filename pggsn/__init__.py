@@ -44,42 +44,42 @@ class Player(BasePlayer):
     survey_q1=models.IntegerField(
         choices=C.SURVEY_CHOICES,
         widget=widgets.RadioSelectHorizontal,
-        label='... like I was working together with my group partners towards a common goal.'
+        label='In the second part of the experiment, I felt like I was working together with my group partners towards a common goal.'
     )
     survey_q2=models.IntegerField(
         choices=C.SURVEY_CHOICES,
         widget=widgets.RadioSelectHorizontal,
-        label='... I was working for my own good instead of the common good.'
+        label='In the second part of the experiment, I felt I was working for my own good instead of the common good.'
     )
     survey_q3=models.IntegerField(
         choices=C.SURVEY_CHOICES,
         widget=widgets.RadioSelectHorizontal,
-        label='... pressured into contributing to the public account.'
+        label='In the second part of the experiment, I felt pressured into contributing to the public account.'
     )
     survey_q4=models.IntegerField(
         choices=C.SURVEY_CHOICES,
         widget=widgets.RadioSelectHorizontal,
-        label='... obligated to contribute to the public account.'
+        label='In the second part of the experiment, I felt obligated to contribute to the public account.'
     )
     survey_q5=models.IntegerField(
         choices=C.SURVEY_CHOICES,
         widget=widgets.RadioSelectHorizontal,
-        label='... it was possible to contribute more to the public account, compared to the first half.'
+        label='In the second part of the experiment, I felt it was possible to contribute more to the public account, compared to the first half.'
     )
     survey_q6=models.IntegerField(
         choices=C.SURVEY_CHOICES,
         widget=widgets.RadioSelectHorizontal,
-        label='... the contributions would not change, compared to the first half.'
+        label='In the second part of the experiment, I felt the contributions would not change, compared to the first half.'
     )
     survey_q7=models.IntegerField(
         choices=C.SURVEY_CHOICES,
         widget=widgets.RadioSelectHorizontal,
-        label='... trusted in my group partners to contribute to the public account.'
+        label='In the second part of the experiment, I trusted in my group partners to contribute to the public account.'
     )
     survey_q8=models.IntegerField(
         choices=C.SURVEY_CHOICES,
         widget=widgets.RadioSelectHorizontal,
-        label='... felt that if I did my part in contributing to the public account, the others would do the same.'
+        label='In the second part of the experiment, I felt that if I did my part in contributing to the public account, the others would do the same.'
     )
 
 # FUNCTIONS
