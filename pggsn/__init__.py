@@ -81,6 +81,31 @@ class Player(BasePlayer):
         widget=widgets.RadioSelectHorizontal,
         label='In the second part of the experiment, I felt that if I did my part in contributing to the public account, the others would do the same.'
     )
+    survey_q9=models.IntegerField(
+        choices=C.SURVEY_CHOICES,
+        widget=widgets.RadioSelectHorizontal,
+        label='In general, I would say that you can trust most people.'
+    )
+    survey_q10=models.IntegerField(
+        choices=C.SURVEY_CHOICES,
+        widget=widgets.RadioSelectHorizontal,
+        label='In general, I would say that you cannot be too careful in dealing with other people.'
+    )
+    survey_q11=models.IntegerField(
+        choices=C.SURVEY_CHOICES,
+        widget=widgets.RadioSelectHorizontal,
+        label='It is best for everyone when people try to fit in.'
+    )
+    survey_q12=models.IntegerField(
+        choices=C.SURVEY_CHOICES,
+        widget=widgets.RadioSelectHorizontal,
+        label='Following the rules and adapting is a sign of a strong and healthy society.'
+    )
+    survey_q13=models.IntegerField(
+        choices=C.SURVEY_CHOICES,
+        widget=widgets.RadioSelectHorizontal,
+        label='We should admire people who go their own way without caring about what others think.'
+    )
 
 # FUNCTIONS
 def set_pgg_round_payoffs(group: Group):
@@ -179,7 +204,7 @@ class Results(Page):
 
 class Survey(Page):
     form_model = 'player'
-    form_fields = [f'survey_q{i}' for i in range(1,9)]
+    form_fields = [f'survey_q{i}' for i in range(1,14)]
 
     @staticmethod
     def is_displayed(player):

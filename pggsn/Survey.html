@@ -28,7 +28,7 @@
 <script>
     $(function () {
         var currentDate = new Date();
-        var remainingTimeoutSeconds = 60;
+        var remainingTimeoutSeconds = 90;
         var milliseconds = Math.floor(remainingTimeoutSeconds * 1000);
         $('.otree-timer__time-left').countdown(currentDate.valueOf() + milliseconds)
             .on('update.countdown', function (event) {
