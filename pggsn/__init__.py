@@ -172,7 +172,7 @@ class TreatmentAssignment(WaitPage):
 
 class TreatmentInfo(Page):
 
-    timeout_seconds=30
+    timeout_seconds=45
 
     @staticmethod
     def is_displayed(player):
