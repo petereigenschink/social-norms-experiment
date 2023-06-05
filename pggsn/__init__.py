@@ -172,8 +172,6 @@ class TreatmentAssignment(WaitPage):
 
 class TreatmentInfo(Page):
 
-    timeout_seconds=45
-
     @staticmethod
     def is_displayed(player):
         return player.round_number == C.PRE_TREATMENT_ROUNDS + 1

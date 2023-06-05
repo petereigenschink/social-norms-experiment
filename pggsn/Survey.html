@@ -38,9 +38,9 @@
                 $(this).html(event.strftime(format));
             })
             .on('finish.countdown', function (event) {
-                var format = '%-N:%S';
-                $(this).html(event.strftime(format));
-                alert("Time has run out. Please make your choices.");
+                $('.otree-timer').html("Please enter your choices!");
+                $('.otree-timer').removeClass('alert-warning');
+                $('.otree-timer').addClass('alert-danger');
             });
     });
 </script>
